@@ -1,0 +1,50 @@
+# 关键词库报告
+
+## 概览
+
+- 总关键词数: **{{ library.total_keywords }}**
+- 流量结构: **{{ library.traffic_structure }}**
+- 品类转化率: **{{ "%.2f" | format(library.category_cvr * 100) }}%**
+- 生成时间: {{ library.created_at }}
+
+## 分级分布
+
+| 分级 | 数量 |
+|------|------|
+{% for tier, count in tier_counts.items() %}
+| {{ tier }} | {{ count }} |
+{% endfor %}
+
+## Top 20 关键词
+
+| 关键词 | ABA排名 | 搜索量 | CPC | SPR | 推广成本 | 优先级 |
+|--------|---------|--------|-----|-----|----------|--------|
+{% for kw in top_keywords %}
+| {{ kw.keyword_text }} | {{ kw.aba_rank_weekly }} | {{ kw.weekly_search_volume }} | {{ "%.2f" | format(kw.cpc) }} | {{ kw.spr }} | {{ "%.2f" | format(kw.push_cpa) }} | {{ kw.priority }} |
+{% endfor %}
+
+## 竞争分析
+
+| 关键词 | 垄断度(流量) | 垄断度(转化) | Top1 ASIN | Top1 品牌 | 有效竞品数 |
+|--------|-------------|-------------|-----------|----------|-----------|
+{% for kw in top_keywords %}
+| {{ kw.keyword_text }} | {{ "%.1f" | format(kw.traffic_monopoly * 100) }}% | {{ "%.1f" | format(kw.sales_monopoly * 100) }}% | {{ kw.top1_asin }} | {{ kw.top1_brand }} | {{ kw.effective_competitor_count }} |
+{% endfor %}
+
+## 否定词列表
+
+{% if library.negation_list %}
+{% for neg in library.negation_list %}
+- {{ neg }}
+{% endfor %}
+{% else %}
+（无否定词）
+{% endif %}
+
+## 推广成本排名
+
+| 关键词 | 推广CPA | 日预算需求 | 日目标订单 |
+|--------|---------|-----------|-----------|
+{% for kw in keywords_by_cost %}
+| {{ kw.keyword_text }} | {{ "%.2f" | format(kw.push_cpa) }} | {{ "%.2f" | format(kw.daily_budget_needed) }} | {{ "%.1f" | format(kw.daily_order_target) }} |
+{% endfor %}

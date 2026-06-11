@@ -1,0 +1,61 @@
+# 完整运营报告
+
+生成时间: {{ result.generated_at }}
+
+---
+
+{% if result.keyword_library %}
+{{ keyword_report_section }}
+{% endif %}
+
+{% if result.competitor_timelines %}
+{% for ct in result.competitor_timelines %}
+---
+
+{{ competitor_report_section }}
+{% endfor %}
+{% endif %}
+
+{% if result.market_phase %}
+---
+
+## 市场阶段
+
+- 当前阶段: **{{ result.market_phase.phase }}**
+- 置信度: {{ "%.1f" | format(result.market_phase.confidence * 100) }}%
+- 连续周数: {{ result.market_phase.consecutive_weeks }}
+- 变化幅度: {{ "%.1f" | format(result.market_phase.change_pct * 100) }}%
+- 建议动作: {{ result.market_phase.recommended_action }}
+{% endif %}
+
+{% if result.profit_model %}
+---
+
+## 利润模型
+
+| 指标 | 值 |
+|------|-----|
+| 售价 | ${{ "%.2f" | format(result.profit_model.price) }} |
+| 产品成本 | ${{ "%.2f" | format(result.profit_model.product_cost) }} |
+| FBA费用 | ${{ "%.2f" | format(result.profit_model.fba_fee) }} |
+| 佣金 | ${{ "%.2f" | format(result.profit_model.commission) }} |
+| 广告费 | ${{ "%.2f" | format(result.profit_model.ad_spend) }} |
+| 退货损失 | ${{ "%.2f" | format(result.profit_model.return_loss) }} |
+| 净利润 | ${{ "%.2f" | format(result.profit_model.net_profit) }} |
+| 净利率 | {{ "%.1f" | format(result.profit_model.net_margin * 100) }}% |
+| 目标利润率 | {{ "%.1f" | format(result.profit_model.target_margin * 100) }}% |
+| 可接受广告支出 | ${{ "%.2f" | format(result.profit_model.acceptable_ad_spend) }} |
+| 目标ACoS | {{ "%.1f" | format(result.profit_model.target_acos * 100) }}% |
+{% endif %}
+
+{% if result.ad_architecture and result.budget_plan %}
+---
+
+{{ strategy_report_section }}
+{% endif %}
+
+{% if result.optimization_actions %}
+---
+
+{{ optimization_report_section }}
+{% endif %}

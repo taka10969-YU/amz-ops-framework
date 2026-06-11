@@ -1,0 +1,49 @@
+# 竞品拆解报告
+
+## 基本信息
+
+- ASIN: **{{ timeline.asin }}**
+- 标题: {{ timeline.product_title }}
+- 品类: {{ timeline.category }}
+- 分析周期: {{ timeline.total_weeks }} 周
+- 阶段总结: {{ timeline.phase_summary }}
+
+## 周度时间线
+
+| 周次 | 日期 | 广告词数 | Top关键词 | 占比 | 策略 | 价格 | 变动 | 优惠券 | BSR | 评分 | 评论数 | 变动 | 策略变化 | 关键决策 |
+|------|------|----------|----------|------|------|------|------|--------|-----|------|--------|------|----------|----------|
+{% for ev in timeline.weekly_events %}
+| {{ ev.week_label }} | {{ ev.date_range }} | {{ ev.ad_keyword_count }} | {{ ev.top_keyword }} | {{ "%.1f" | format(ev.top_keyword_share * 100) }}% | {{ ev.top_keyword_strategy }} | {{ "%.2f" | format(ev.price) }} | {{ ev.price_change }} | {{ ev.coupon }} | {{ ev.bsr_category }} | {{ "%.1f" | format(ev.rating) }} | {{ ev.reviews }} | {{ ev.review_change }} | {{ ev.ad_strategy_change }} | {{ ev.key_decision }} |
+{% endfor %}
+
+## 广告词演化
+
+{% for ev in timeline.weekly_events %}
+- **{{ ev.week_label }}** ({{ ev.date_range }}): {{ ev.ad_keyword_count }} 个关键词, 策略: {{ ev.ad_strategy_change or '无变化' }}
+{% endfor %}
+
+## 价格策略
+
+{% if price_events %}
+{% for ev in price_events %}
+- **{{ ev.week_label }}**: {{ ev.price_change }} → ${{ "%.2f" | format(ev.price) }}
+{% endfor %}
+{% else %}
+（未检测到价格调整）
+{% endif %}
+
+## 评论分析
+
+{% if review_events %}
+{% for ev in review_events %}
+- **{{ ev.week_label }}**: {{ ev.review_change }} → {{ ev.reviews }} 条, 评分 {{ "%.1f" | format(ev.rating) }}
+{% endfor %}
+{% else %}
+（评论数据平稳）
+{% endif %}
+
+## 关键发现
+
+{% for finding in findings %}
+{{ finding }}
+{% endfor %}

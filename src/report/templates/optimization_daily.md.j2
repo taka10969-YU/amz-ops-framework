@@ -1,0 +1,16 @@
+# 每日优化清单 - {{ report_date }}
+
+{% for priority_level in priority_groups %}
+## {{ priority_level.label }} ({{ priority_level.items | length }} 项)
+
+{% if priority_level.items %}
+| 操作 | 广告活动 | 关键词 | 当前值 | 建议值 | 原因 | 预计影响 |
+|------|----------|--------|--------|--------|------|----------|
+{% for a in priority_level.items %}
+| {{ a.method }} | {{ a.campaign }} | {{ a.keyword }} | {{ a.current_value }} | {{ a.suggested_value }} | {{ a.reason }} | {{ a.estimated_impact }} |
+{% endfor %}
+{% else %}
+（无）
+{% endif %}
+
+{% endfor %}

@@ -1,0 +1,91 @@
+# 广告策略报告
+
+## 广告架构
+
+- 架构名称: **{{ architecture.name }}**
+- 当前阶段: **{{ architecture.stage }}**
+- 推广策略: {{ architecture.push_strategy }}
+- 竞价策略: {{ architecture.bidding_strategy }}
+- 首位竞价比例: {{ architecture.top_position_bid_pct }}%
+- 其余位置比例: {{ architecture.rest_position_bid_pct }}%
+
+### 广告活动结构
+
+| 活动名称 | 类型 | 预算 | 匹配方式 | 关键词数 |
+|----------|------|------|----------|----------|
+{% for camp in architecture.campaigns %}
+| {{ camp.name }} | {{ camp.type }} | {{ camp.budget }} | {{ camp.match_type }} | {{ camp.keyword_count }} |
+{% endfor %}
+
+## 预算分配
+
+- 运营阶段: **{{ budget.stage }}**
+- 预计营收: ${{ "%.2f" | format(budget.revenue) }}
+- 广告占比: {{ "%.1f" | format(budget.ad_spend_ratio * 100) }}%
+- 广告预算: ${{ "%.2f" | format(budget.ad_spend_amount) }}
+- 目标ACoS: {{ "%.1f" | format(budget.target_acos * 100) }}%
+- 净利率: {{ "%.1f" | format(budget.net_margin * 100) }}%
+- 可接受广告支出: ${{ "%.2f" | format(budget.acceptable_ad_spend) }}
+
+### 按阶段分配
+
+| 阶段 | 占比 |
+|------|------|
+{% for stage_name, pct in budget.allocations.items() %}
+| {{ stage_name }} | {{ "%.1f" | format(pct * 100) }}% |
+{% endfor %}
+
+### 按广告类型分配
+
+| 广告类型 | 占比 |
+|----------|------|
+{% for ad_type, pct in budget.ad_type_allocations.items() %}
+| {{ ad_type }} | {{ "%.1f" | format(pct * 100) }}% |
+{% endfor %}
+
+## 风险评估
+
+{% if risk_alerts %}
+| 风险类型 | 触发条件 | 当前值 | 阈值 | 严重程度 | 应对策略 | 执行动作 | 负责人 |
+|----------|----------|--------|------|----------|----------|----------|--------|
+{% for risk in risk_alerts %}
+| {{ risk.risk_type }} | {{ risk.trigger_condition }} | {{ risk.current_value }} | {{ risk.threshold }} | {{ risk.severity }} | {{ risk.strategy }} | {{ risk.action }} | {{ risk.owner }} |
+{% endfor %}
+{% else %}
+（当前无活跃风险）
+{% endif %}
+
+## 竞品攻击计划
+
+{% for plan in attack_plans %}
+### 目标: {{ plan.competitor_asin }}
+
+#### 弱点分析
+
+{% for w in plan.weaknesses %}
+- **{{ w.area }}**: {{ w.detail }}
+{% endfor %}
+
+#### 跟进动作
+
+{% for a in plan.copy_actions %}
+- {{ a }}
+{% endfor %}
+
+#### 差异化动作
+
+{% for a in plan.differentiate_actions %}
+- {{ a }}
+{% endfor %}
+
+#### 分阶段执行
+
+| 阶段 | 动作 | 时间 | 目标 |
+|------|------|------|------|
+{% for phase in plan.phased_plan %}
+| {{ phase.phase }} | {{ phase.action }} | {{ phase.timeline }} | {{ phase.goal }} |
+{% endfor %}
+
+{% else %}
+（暂无攻击计划）
+{% endfor %}
